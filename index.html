@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de QR Code</title>
+
+    <!-- Ícone da aba -->
+    <link rel="icon" href="ico/Ativo 3@300x-8.png" type="image/png">
+
+    <link rel="stylesheet" href="estilo.css">
+    
+</head>
+
+<body>
+
+    <div class="logo-container">
+        <img src="Ativo 1@300x-8.png" alt="Minha Logo" class="logo">
+    </div>
+
+    <div class="container">
+        <h1>Gerador de QR Code</h1>
+        <input type="text" id="texto" placeholder="Digite seu link...">
+        <div class="button-group">
+            <button class="generate" onclick="gerarQRCode()">Gerar</button>
+            <button class="download" onclick="baixarQRCode()">Baixar</button>
+        </div>
+        <div id="qrcode" style="display: none;">
+            <canvas id="qrcodeCanvas"></canvas>
+        </div>
+      
+        
+        <div class="extra-buttons" style="display: none;">
+            <button class="download" onclick="baixarQRCode()">Baixar</button>
+            <button class="delete" onclick="excluirQRCode()">Excluir</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <script>
+        var qr = null;
+
+function gerarQRCode() {
+    var texto = document.getElementById('texto').value.trim();
+    if (texto === '') {
+        alert('Digite algum texto ou link!');
+        return;
+    }
+
+    if (!qr) {
+        qr = new QRious({
+            element: document.getElementById('qrcodeCanvas'),
+            size: 200
+        });
+    }
+
+    qr.value = texto;
+    document.getElementById('qrcode').style.display = 'block';
+    document.querySelector('.extra-buttons').style.display = 'block'; // Mostra os botões
+}
+
+function baixarQRCode() {
+    if (!qr || !qr.value) {
+        alert('Você precisa gerar um QR Code primeiro!');
+        return;
+    }
+    var link = document.createElement('a');
+    link.href = qr.toDataURL("image/png");
+    link.download = "qrcode.png";
+    link.click();
+}
+
+function excluirQRCode() {
+    var canvas = document.getElementById('qrcodeCanvas');
+    var ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    document.getElementById('qrcode').style.display = 'none';
+    document.querySelector('.extra-buttons').style.display = 'none'; // Esconde os botões
+    qr = null;
+}
+
+    </script>
+
+</body>
+</html>
